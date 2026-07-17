@@ -248,7 +248,7 @@ function Index() {
                   <YAxis tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 220)"
                     tickFormatter={(v) => v >= 1000 ? `${(v/1000).toFixed(0)}k` : v} />
                   <Tooltip
-                    formatter={(v: number) => [`${v.toLocaleString("en-IN")} L`, "Harvest"]}
+                    formatter={(v) => [`${Number(v).toLocaleString("en-IN")} L`, "Harvest"]}
                     contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.9 0.015 90)" }}
                   />
                   <Bar dataKey="liters" fill="oklch(0.55 0.12 220)" radius={[6, 6, 0, 0]} />
