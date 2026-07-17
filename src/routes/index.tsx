@@ -221,7 +221,7 @@ function Index() {
                       <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.9 0.015 90)" vertical={false} />
                       <XAxis dataKey="month" tick={{ fontSize: 11 }} />
                       <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 1000 ? `${(v/1000).toFixed(0)}k` : v} />
-                      <Tooltip formatter={(v: number) => `${v.toLocaleString("en-IN")} L`} />
+                      <Tooltip formatter={(v: any) => `${v.toLocaleString("en-IN")} L`} />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
                       <Bar dataKey="harvest" name="Harvest" fill="oklch(0.55 0.12 220)" radius={[6,6,0,0]} />
                       <Line dataKey="demand" name="Demand" stroke="oklch(0.66 0.15 40)" strokeWidth={2.5} dot={false} />
@@ -256,7 +256,7 @@ function Index() {
                       <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
                       <Tooltip
                         labelFormatter={(d) => `Day ${d}`}
-                        formatter={(v: number) => [`${v.toLocaleString("en-IN")} L`, "Tank level"]} />
+                        formatter={(v: any) => [`${v.toLocaleString("en-IN")} L`, "Tank level"]} />
                       <Area type="monotone" dataKey="level" stroke="oklch(0.42 0.09 210)" fill="url(#lvl)" strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -271,7 +271,7 @@ function Index() {
                       <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.9 0.015 90)" horizontal={false} />
                       <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
                       <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={80} />
-                      <Tooltip formatter={(v: number) => `${v.toLocaleString("en-IN")} L / yr`} />
+                      <Tooltip formatter={(v: any) => `${v.toLocaleString("en-IN")} L / yr`} />
                       <Bar dataKey="liters" fill="oklch(0.55 0.11 155)" radius={[0,6,6,0]} />
                     </BarChart>
                   </ResponsiveContainer>
