@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   ComposedChart, Line, Legend, Area, AreaChart,
@@ -15,6 +15,10 @@ import {
   type RoofMaterial,
 } from "@/lib/rainfall-data";
 import { computeBOM, goaWaterBill, tankCost } from "@/lib/pricing";
+import {
+  predict as predictAPI, TALUKA_ENCODING, ROOF_ENCODING, API_URL,
+  type PredictResponse,
+} from "@/lib/api";
 
 export const Route = createFileRoute("/")({ component: Index });
 
@@ -40,9 +44,33 @@ function Index() {
   const [household, setHousehold] = useState(4);
   const [tank, setTank] = useState(5000);
   const [tab, setTab] = useState<Tab>("overview");
+  const [apiResult, setApiResult] = useState<PredictResponse | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [apiLoading, setApiLoading] = useState(false);
 
   const taluka = TALUKAS.find(t => t.name === talukaName) ?? TALUKAS[0];
   const coef = ROOF_MATERIALS[material].coef;
+
+  useEffect(() => {
+    const talukaCode = TALUKA_ENCODING[talukaName];
+    const roofCode = ROOF_ENCODING[material];
+    if (talukaCode === undefined) return;
+    const ctrl = new AbortController();
+    setApiLoading(true); setApiError(null);
+    const t = setTimeout(() => {
+      predictAPI({
+        taluka: talukaCode,
+        roof_area: roofArea,
+        roof_type: roofCode,
+        family_size: household,
+        tank_size: tank,
+      })
+        .then((r) => { if (!ctrl.signal.aborted) setApiResult(r); })
+        .catch((e) => { if (!ctrl.signal.aborted) setApiError(e.message); })
+        .finally(() => { if (!ctrl.signal.aborted) setApiLoading(false); });
+    }, 250);
+    return () => { ctrl.abort(); clearTimeout(t); };
+  }, [talukaName, roofArea, material, household, tank]);
 
   const annualHarvest = useMemo(
     () => predictHarvestLiters(roofArea, taluka.annualMM, coef),
@@ -265,6 +293,32 @@ function Index() {
                   <KPI icon={IndianRupee} tone="warn" label="System cost" value={INR(systemCost)} delta={`${bom.length} components`} />
                   <KPI icon={Gauge} tone="brand" label="Payback" value={`${paybackYears.toFixed(1)} yr`} delta={`Saves ${INR(annualSavings)}/yr`} />
                 </div>
+
+                <Panel
+                  title="Live model · FastAPI /predict"
+                  subtitle={`POST ${API_URL}/predict · RandomForest (purerain_model.pkl)`}
+                >
+                  {apiLoading && !apiResult && (
+                    <div className="text-xs text-muted-foreground">Calling model…</div>
+                  )}
+                  {apiError && (
+                    <div className="rounded-md border border-[color:var(--color-warn)]/40 bg-[color:var(--color-warn)]/5 p-3 text-xs text-[color:var(--color-warn)]">
+                      Backend unreachable: {apiError}
+                      <div className="mt-1 text-muted-foreground">
+                        Start it with <code className="font-mono">cd backend &amp;&amp; uvicorn main:app --reload --port 8000</code>
+                      </div>
+                    </div>
+                  )}
+                  {apiResult && (
+                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                      <KPI icon={Droplets} tone="brand" label="Model · annual harvest" value={L(apiResult.annual_collection_liters)} delta="RandomForest sum(12 mo)" />
+                      <KPI icon={Timer} tone="signal" label="Model · autonomy" value={`${apiResult.water_autonomy_days}d`} delta={`${household} × 135 L/day`} />
+                      <KPI icon={IndianRupee} tone="warn" label="Model · setup cost" value={INR(apiResult.estimated_setup_cost)} delta="tank×1.5 + area×50" />
+                      <KPI icon={Gauge} tone="brand" label="Model · payback" value={`${apiResult.payback_period_years} yr`} delta="Savings @ ₹0.002/L" />
+                    </div>
+                  )}
+                </Panel>
+
 
                 <Panel title="Monthly harvest vs demand" subtitle="Litres per month · PWD slab overlay">
                   <div className="h-72">
