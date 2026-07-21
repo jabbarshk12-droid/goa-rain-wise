@@ -44,9 +44,33 @@ function Index() {
   const [household, setHousehold] = useState(4);
   const [tank, setTank] = useState(5000);
   const [tab, setTab] = useState<Tab>("overview");
+  const [apiResult, setApiResult] = useState<PredictResponse | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [apiLoading, setApiLoading] = useState(false);
 
   const taluka = TALUKAS.find(t => t.name === talukaName) ?? TALUKAS[0];
   const coef = ROOF_MATERIALS[material].coef;
+
+  useEffect(() => {
+    const talukaCode = TALUKA_ENCODING[talukaName];
+    const roofCode = ROOF_ENCODING[material];
+    if (talukaCode === undefined) return;
+    const ctrl = new AbortController();
+    setApiLoading(true); setApiError(null);
+    const t = setTimeout(() => {
+      predictAPI({
+        taluka: talukaCode,
+        roof_area: roofArea,
+        roof_type: roofCode,
+        family_size: household,
+        tank_size: tank,
+      })
+        .then((r) => { if (!ctrl.signal.aborted) setApiResult(r); })
+        .catch((e) => { if (!ctrl.signal.aborted) setApiError(e.message); })
+        .finally(() => { if (!ctrl.signal.aborted) setApiLoading(false); });
+    }, 250);
+    return () => { ctrl.abort(); clearTimeout(t); };
+  }, [talukaName, roofArea, material, household, tank]);
 
   const annualHarvest = useMemo(
     () => predictHarvestLiters(roofArea, taluka.annualMM, coef),
