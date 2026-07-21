@@ -13,11 +13,12 @@ export const TALUKA_ENCODING: Record<string, number> = Object.fromEntries(
   [...TALUKAS.map((t) => t.name)].sort().map((name, i) => [name, i])
 );
 
-export const ROOF_ENCODING = {
+export const ROOF_ENCODING: Record<string, number> = {
   concrete: 0,
   metal: 1,
   tile: 2,
-} as const;
+  clay: 2,
+};
 
 export interface PredictRequest {
   taluka: number;
