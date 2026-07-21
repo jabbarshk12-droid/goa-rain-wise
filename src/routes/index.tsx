@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   ComposedChart, Line, Legend, Area, AreaChart,
@@ -15,6 +15,10 @@ import {
   type RoofMaterial,
 } from "@/lib/rainfall-data";
 import { computeBOM, goaWaterBill, tankCost } from "@/lib/pricing";
+import {
+  predict as predictAPI, TALUKA_ENCODING, ROOF_ENCODING, API_URL,
+  type PredictResponse,
+} from "@/lib/api";
 
 export const Route = createFileRoute("/")({ component: Index });
 
