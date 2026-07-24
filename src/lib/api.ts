@@ -1,10 +1,10 @@
 // Client for the local FastAPI microservice (backend/main.py).
-// Set VITE_API_URL in a .env file to override (default: http://localhost:8000).
+// Set VITE_API_URL in a .env file to override (default: https://goa-rain-wise-1.onrender.com).
 
 import { TALUKAS } from "./rainfall-data";
 
 export const API_URL =
-  (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8000";
+  (import.meta.env.VITE_API_URL as string | undefined) ?? "https://goa-rain-wise-1.onrender.com";
 
 // LabelEncoder in the training notebook sorts classes alphabetically.
 // Taluka encoder → alphabetical order of taluka names present at training time.
