@@ -1,6 +1,9 @@
 # PureRain AI
 
-A React + FastAI web application that predicts household rainwater harvesting potential for Goa, India using a trained machine learning model.
+A React + FastAPI web application that predicts household rainwater harvesting potential for Goa, India using a trained machine learning model.
+
+- **Live frontend**: https://goa-rain-wise-frontend.netlify.app
+- **Live backend**: https://goa-rain-wise-1.onrender.com
 
 ## What it does
 
