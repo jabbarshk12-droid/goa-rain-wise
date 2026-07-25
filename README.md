@@ -23,8 +23,7 @@ PureRain AI helps Goa homeowners estimate how much rainwater they can collect fr
 │   ├── purerain_model.pkl      # Trained RandomForest model
 │   ├── taluka_encoder.pkl      # Taluka label encoder
 │   ├── roof_encoder.pkl        # Roof type label encoder
-│   ├── requirements.txt        # Python dependencies
-│   └── README.md               # Backend setup guide
+│   └── requirements.txt        # Python dependencies
 ├── src/
 │   ├── lib/
 │   │   ├── api.ts              # Frontend client for /predict
@@ -53,6 +52,7 @@ uvicorn main:app --reload --port 8000
 ```
 
 The backend will be available at `http://localhost:8000`.
+Docs UI: http://localhost:8000/docs
 
 ### 2. Start the React frontend
 
@@ -96,14 +96,30 @@ Response:
 
 The trained model expects these features in order:
 
-| Feature    | Type   | Description                          |
-|------------|--------|--------------------------------------|
-| `Taluka`   | int    | Encoded taluka name                  |
+| Feature    | Type   | Description                               |
+|------------|--------|-------------------------------------------|
+| `Taluka`   | int    | Encoded taluka name                       |
 | `Month`    | int    | 1–12, batched internally for annual total |
-| `RoofArea` | float  | Rooftop area in square meters        |
-| `RoofType` | int    | Encoded roof material                |
+| `RoofArea` | float  | Rooftop area in square meters             |
+| `RoofType` | int    | Encoded roof material                     |
 
 Frontend string values are mapped to integers using the encoders loaded from `taluka_encoder.pkl` and `roof_encoder.pkl`.
+
+### Training data coverage
+
+The training dataset (CWC Goa, 1991–2020) covers the **PONDA** tehsil and roof categories **Concrete / Metal / Tile**. These are the only inputs the model was trained on; other talukas or roof types may fall outside the model's learned distribution.
+
+## Frontend ↔ Backend connection
+
+The frontend (`src/lib/api.ts`) sends a `POST` request to `/predict` whenever the user changes an input. CORS is open (`*`) on the backend for local development — restrict `allow_origins` before deploying to production.
+
+To point the frontend at a different backend, set the `VITE_API_URL` environment variable:
+
+```bash
+VITE_API_URL=https://goa-rain-wise-1.onrender.com bun run build
+```
+
+Netlify users can also set `VITE_API_URL` under **Site settings → Environment variables**.
 
 ## Features
 
@@ -125,14 +141,6 @@ Current deployments:
 
 - Frontend: https://goa-rain-wise-frontend.netlify.app
 - Backend: https://goa-rain-wise-1.onrender.com
-
-Build the frontend against the deployed backend:
-
-```bash
-VITE_API_URL=https://goa-rain-wise-1.onrender.com bun run build
-```
-
-Netlify users can also set `VITE_API_URL` under **Site settings → Environment variables**.
 
 ## License
 
