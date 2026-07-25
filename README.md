@@ -1,10 +1,13 @@
 # PureRain AI
 
-A React + FastAI web application that predicts household rainwater harvesting potential for Goa, India using a trained machine learning model.
+A React + FastAPI web application that predicts household rainwater harvesting potential for Goa, India using a trained machine learning model.
+
+- **Live frontend**: https://goa-rain-wise-frontend.netlify.app
+- **Live backend**: https://goa-rain-wise-1.onrender.com
 
 ## What it does
 
-PureRain AI helps Goa homeowners estimate how much rainwater they can collect from their rooftop each year. Users select their local taluka, enter rooftop area and material, and specify household size and tank capacity. The frontend sends these inputs to a local Python FastAPI backend that runs a trained RandomForest model and returns annual collection, water autonomy days, estimated setup cost, and payback period.
+PureRain AI helps Goa homeowners estimate how much rainwater they can collect from their rooftop each year. Users select their local taluka, enter rooftop area and material, and specify household size and tank capacity. The frontend sends these inputs to the Python FastAPI backend that runs a trained RandomForest model and returns annual collection, water autonomy days, estimated setup cost, and payback period.
 
 ## Tech stack
 
@@ -118,9 +121,18 @@ Frontend string values are mapped to integers using the encoders loaded from `ta
 
 The frontend can be deployed to any static hosting service. The backend must be hosted separately and the frontend pointed at it via the `VITE_API_URL` environment variable.
 
+Current deployments:
+
+- Frontend: https://goa-rain-wise-frontend.netlify.app
+- Backend: https://goa-rain-wise-1.onrender.com
+
+Build the frontend against the deployed backend:
+
 ```bash
-VITE_API_URL=https://your-backend-url.com bun run build
+VITE_API_URL=https://goa-rain-wise-1.onrender.com bun run build
 ```
+
+Netlify users can also set `VITE_API_URL` under **Site settings → Environment variables**.
 
 ## License
 
