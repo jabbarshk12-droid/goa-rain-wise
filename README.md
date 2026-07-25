@@ -121,9 +121,18 @@ Frontend string values are mapped to integers using the encoders loaded from `ta
 
 The frontend can be deployed to any static hosting service. The backend must be hosted separately and the frontend pointed at it via the `VITE_API_URL` environment variable.
 
+Current deployments:
+
+- Frontend: https://goa-rain-wise-frontend.netlify.app
+- Backend: https://goa-rain-wise-1.onrender.com
+
+Build the frontend against the deployed backend:
+
 ```bash
-VITE_API_URL=https://your-backend-url.com bun run build
+VITE_API_URL=https://goa-rain-wise-1.onrender.com bun run build
 ```
+
+Netlify users can also set `VITE_API_URL` under **Site settings → Environment variables**.
 
 ## License
 
