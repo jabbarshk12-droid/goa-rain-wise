@@ -1,4 +1,4 @@
-# PureRain AI
+# Goa Rain Wise
 
 A React + FastAPI web application that predicts household rainwater harvesting potential for Goa, India using a trained machine learning model.
 
@@ -7,7 +7,7 @@ A React + FastAPI web application that predicts household rainwater harvesting p
 
 ## What it does
 
-PureRain AI helps Goa homeowners estimate how much rainwater they can collect from their rooftop each year. Users select their local taluka, enter rooftop area and material, and specify household size and tank capacity. The frontend sends these inputs to the Python FastAPI backend that runs a trained RandomForest model and returns annual collection, water autonomy days, estimated setup cost, and payback period.
+Goa Rain Wise helps Goa homeowners estimate how much rainwater they can collect from their rooftop each year. Users select their local taluka, enter rooftop area and material, and specify household size and tank capacity. The frontend sends these inputs to the Python FastAPI backend that runs a trained RandomForest model and returns annual collection, water autonomy days, estimated setup cost, and payback period.
 
 ## Tech stack
 
