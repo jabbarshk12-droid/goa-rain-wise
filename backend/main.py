@@ -30,7 +30,7 @@ app.add_middleware(
 )
 
 BASE_DIR = Path(__file__).parent
-model = joblib.load(BASE_DIR / "purerain_model.pkl")
+model = joblib.load(BASE_DIR / "rainfall_model.pkl")
 
 
 class UserInput(BaseModel):
